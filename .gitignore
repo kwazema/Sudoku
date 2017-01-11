@@ -1,5 +1,6 @@
 ## General
 *.l
+Untracked/
 
 ## Java
 *.class
