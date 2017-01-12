@@ -48,6 +48,13 @@ class Game : AdvancedGame() {
                             it.borderColor = Color.BLACK
                             it.borderWidth = 2f
                         })
+                .queue("UbuntuMB32R", "UbuntuMB32R", BitmapFont::class,
+                        FontLoaderParameter(astManager["UbuntuMono-B"]) {
+                            it.color = Color.RED
+                            it.size = 32
+                            it.borderColor = Color.BLACK
+                            it.borderWidth = 2f
+                        })
                 .load {
                     scrManager.loadAll()
                     scrManager.change("game")

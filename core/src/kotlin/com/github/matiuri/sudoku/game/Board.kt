@@ -3,6 +3,8 @@ package com.github.matiuri.sudoku.game
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.github.matiuri.sudoku.Game
 import com.github.matiuri.sudoku.game.Tools.generate
+import com.github.matiuri.sudoku.game.Tools.solve
+import mati.advancedgdx.AdvancedGame.Static.log
 
 class Board(game: Game, spx: Float, spy: Float, wh: Float, pad: Float) : Group() {
     private val blocks: Array<Array<Block>>
@@ -31,14 +33,20 @@ class Board(game: Game, spx: Float, spy: Float, wh: Float, pad: Float) : Group()
         Thread(Runnable {
             Thread.sleep(500)
             var done: Boolean
+            var countg: Int = 1
+            var counts: Int = 1
             do {
                 try {
                     generate(cells)
+                    solve(cells)
                     done = true
                 } catch (e: IllegalStateException) {
                     done = false
+                    if (e.message?.contains("Generator") ?: false) countg++
+                    else counts++
                 }
             } while (!done)
+            log.d(this.javaClass.simpleName, "$countg | $counts | ${countg + counts}")
         }, "Generator").start()
     }
 }

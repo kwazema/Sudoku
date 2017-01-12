@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.github.matiuri.sudoku.Game
+import java.util.*
 
 class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, val row: Int, val block: Int) :
         Actor() {
@@ -14,12 +15,19 @@ class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, 
     }
 
     var num: Int = 0
+
     @Volatile
     var number: Int = 0
     @Volatile
     var hidden: Boolean = false
     @Volatile
     var usrnum: Int = 0
+    @Volatile
+    var possibilities: MutableList<Int> = ArrayList()
+
+    private val time: Float = 1.5f
+    private var timer: Float = 0f
+    private var current = 0
 
     init {
         setBounds(x, y, wh, wh)
@@ -33,5 +41,18 @@ class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, 
             game.astManager["UbuntuMB32W", BitmapFont::class].draw(batch, "$number", x + 8f, top - 8f)
         if (usrnum != 0 && hidden)
             game.astManager["UbuntuMB32B", BitmapFont::class].draw(batch, "$usrnum", x + 8f, top - 8f)
+        if (usrnum == 0 && hidden && !possibilities.isEmpty()) {
+            game.astManager["UbuntuMB32R", BitmapFont::class].draw(batch,
+                    "${possibilities[current % (possibilities.size)]}", x + 8f, top - 8f)
+        }
+    }
+
+    override fun act(delta: Float) {
+        if (!possibilities.isEmpty())
+            timer += delta
+        if (timer > time) {
+            timer = 0f
+            current++
+        }
     }
 }
