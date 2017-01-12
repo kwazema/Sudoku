@@ -3,7 +3,6 @@ package com.github.matiuri.sudoku.game
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.github.matiuri.sudoku.Game
 import com.github.matiuri.sudoku.game.Tools.generate
-import com.github.matiuri.sudoku.game.Tools.solve
 import mati.advancedgdx.AdvancedGame.Static.log
 
 class Board(game: Game, spx: Float, spy: Float, wh: Float, pad: Float) : Group() {
@@ -38,7 +37,13 @@ class Board(game: Game, spx: Float, spy: Float, wh: Float, pad: Float) : Group()
             do {
                 try {
                     generate(cells)
-                    solve(cells)
+                    Tools.remove(cells, 56) //MAX = 56
+                    cells.forEach {
+                        it.forEach {
+                            it.usrnum = 0
+                            it.possibilities.clear()
+                        }
+                    }
                     done = true
                 } catch (e: IllegalStateException) {
                     done = false
@@ -47,6 +52,7 @@ class Board(game: Game, spx: Float, spy: Float, wh: Float, pad: Float) : Group()
                 }
             } while (!done)
             log.d(this.javaClass.simpleName, "$countg | $counts | ${countg + counts}")
+            log.d(Thread.currentThread().name, "Dead!")
         }, "Generator").start()
     }
 }

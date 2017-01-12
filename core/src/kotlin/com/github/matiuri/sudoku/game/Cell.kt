@@ -42,8 +42,12 @@ class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, 
         if (usrnum != 0 && hidden)
             game.astManager["UbuntuMB32B", BitmapFont::class].draw(batch, "$usrnum", x + 8f, top - 8f)
         if (usrnum == 0 && hidden && !possibilities.isEmpty()) {
-            game.astManager["UbuntuMB32R", BitmapFont::class].draw(batch,
-                    "${possibilities[current % (possibilities.size)]}", x + 8f, top - 8f)
+            try {
+                game.astManager["UbuntuMB32R", BitmapFont::class].draw(batch,
+                        "${possibilities[current % (possibilities.size)]}", x + 8f, top - 8f)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

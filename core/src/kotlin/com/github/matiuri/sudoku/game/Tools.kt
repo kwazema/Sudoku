@@ -1,7 +1,7 @@
 package com.github.matiuri.sudoku.game
 
 import com.badlogic.gdx.math.MathUtils.random
-import com.badlogic.gdx.math.MathUtils.randomBoolean
+import mati.advancedgdx.AdvancedGame
 import java.util.*
 
 object Tools {
@@ -10,10 +10,16 @@ object Tools {
         val rows: Array<List<Cell>> = rowsList(cells)
         val blocks: Array<List<Cell>> = blocksList(cells)
 
-        cells.forEach { it.forEach { it.number = 0 } }
+        cells.forEach {
+            it.forEach {
+                it.number = 0
+                it.usrnum = 0
+                it.possibilities.clear()
+                it.hidden = false
+            }
+        }
         cells.forEach {
             it.forEach { cell ->
-                cell.hidden = randomBoolean(.65f)
                 val related: Set<Cell> = relatedCells(blocks, cell, cols, rows)
                 var candidate: Int
                 val attempts: MutableSet<Int> = HashSet()
@@ -23,20 +29,53 @@ object Tools {
                     if (attempts.size == 9) throw IllegalStateException("Impossible Game, Generator")
                 } while (related.filter { it.num != cell.num }.fold(false) { f, c -> c.number == candidate || f })
                 cell.number = candidate
-                if (!cell.hidden) cell.usrnum = cell.number
-                else cell.usrnum = 0
+                cell.usrnum = cell.number
             }
         }
     }
 
-    fun solve(cells: Array<Array<Cell>>) {
+    fun remove(cells: Array<Array<Cell>>, difficulty: Int = 30) {
+        AdvancedGame.log.d(this.javaClass.simpleName, "Attempting to remove cells")
+        (1..difficulty).forEach {
+            var cell: Cell
+            var count: Int = 0
+            do {
+                do {
+                    cell = cells[random(0, 8)][random(0, 8)]
+                    AdvancedGame.log.d(this.javaClass.simpleName, "Try!")
+                } while (cell.hidden)
+                cell.hidden = true
+                cell.usrnum = 0
+                var failed: Boolean
+                try {
+                    AdvancedGame.log.d(this.javaClass.simpleName, "Attempting to solve")
+                    solve(cells)
+                    failed = false
+                } catch (e: IllegalStateException) {
+                    cell.hidden = false
+                    failed = true
+                }
+                AdvancedGame.log.d(this.javaClass.simpleName, "$failed")
+                count++
+                if (failed && count > 500) throw IllegalStateException("Impossible Game, Generator")
+            } while (failed)
+        }
+        AdvancedGame.log.d(this.javaClass.simpleName, "Removed")
+    }
+
+    private fun solve(cells: Array<Array<Cell>>) {
         val cols: Array<List<Cell>> = colsList(cells)
         val rows: Array<List<Cell>> = rowsList(cells)
         val blocks: Array<List<Cell>> = blocksList(cells)
 
+        cells.forEach {
+            it.forEach {
+                it.usrnum = 0
+                it.possibilities.clear()
+            }
+        }
         var solved: Boolean = false
         while (!solved) {
-            //Thread.sleep(1000)
             cells.forEach {
                 it.filter { it.hidden && it.usrnum == 0 }.forEach { cell ->
                     cell.possibilities.clear()
@@ -50,7 +89,6 @@ object Tools {
                     }
                 }
             }
-            //Thread.sleep(5000)
             var impossible: Boolean = true
             cells.forEach {
                 it.filter { it.hidden && it.usrnum == 0 && it.possibilities.size == 1 }.forEach {
@@ -59,11 +97,12 @@ object Tools {
                 }
             }
             if (impossible) throw IllegalStateException("Impossible Game, Solver")
-            solved = cells.fold(true) {f_, c_ ->
+            solved = cells.fold(true) { f_, c_ ->
                 f_ && c_.fold(true) { f, c ->
                     f && (!c.hidden || c.number == c.usrnum)
                 }
             }
+            AdvancedGame.log.d(this.javaClass.simpleName, "Solving try")
         }
     }
 
