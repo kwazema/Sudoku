@@ -7,12 +7,14 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
+import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.github.matiuri.sudoku.screens.GameScreen
 import mati.advancedgdx.AdvancedGame
 import mati.advancedgdx.assets.FontLoader.FontLoaderParameter
 import mati.advancedgdx.utils.glClearColor
+import kotlin.reflect.KClass
 
-class Game : AdvancedGame() {
+class Game(val cellListener: KClass<out InputListener>) : AdvancedGame() {
     override fun create() {
         super.create()
         Gdx.app.logLevel = LOG_DEBUG

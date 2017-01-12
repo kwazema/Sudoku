@@ -1,13 +1,16 @@
 package com.github.matiuri.sudoku.game
 
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.github.matiuri.sudoku.Game
 import com.github.matiuri.sudoku.game.Tools.generate
 import mati.advancedgdx.AdvancedGame.Static.log
 
-class Board(game: Game, spx: Float, spy: Float, wh: Float, pad: Float) : Group() {
+class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Float) : Group() {
     private val blocks: Array<Array<Block>>
     private val cells: Array<Array<Cell>>
+    private val generator: Thread
+    private var generated: Boolean = false
 
     init {
         blocks = Array(3) { x ->
@@ -29,7 +32,7 @@ class Board(game: Game, spx: Float, spy: Float, wh: Float, pad: Float) : Group()
             }
         }
 
-        Thread(Runnable {
+        generator = Thread(Runnable {
             Thread.sleep(500)
             var done: Boolean
             var countg: Int = 1
@@ -53,6 +56,27 @@ class Board(game: Game, spx: Float, spy: Float, wh: Float, pad: Float) : Group()
             } while (!done)
             log.d(this.javaClass.simpleName, "$countg | $counts | ${countg + counts}")
             log.d(Thread.currentThread().name, "Dead!")
-        }, "Generator").start()
+        }, "Generator")
+        generator.start()
+    }
+
+    override fun act(delta: Float) {
+        if (!generator.isAlive && !generated) {
+            generated = true
+            cells.forEach {
+                it.filter(Cell::hidden).forEach {
+                    it.addListener(game.cellListener.java.constructors[0].newInstance(it) as InputListener)
+                }
+            }
+        }
+        Cell.timer += delta
+        if(Cell.timer > Cell.time) {
+            cells.forEach {
+                it.forEach {
+                    it.current++
+                }
+            }
+            Cell.timer = 0f
+        }
     }
 }
