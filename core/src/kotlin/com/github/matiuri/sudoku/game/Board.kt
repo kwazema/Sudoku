@@ -4,9 +4,10 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.github.matiuri.sudoku.Game
 import com.github.matiuri.sudoku.game.Tools.generate
+import com.github.matiuri.sudoku.screens.NewGameScreen.Difficulty
 import mati.advancedgdx.AdvancedGame.Static.log
 
-class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Float) : Group() {
+class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Float, difficulty: Difficulty) : Group() {
     private val blocks: Array<Array<Block>>
     private val cells: Array<Array<Cell>>
     private val generator: Thread
@@ -40,7 +41,7 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
             do {
                 try {
                     generate(cells)
-                    Tools.remove(cells, 56) //MAX = 56
+                    Tools.remove(cells, difficulty.n)
                     cells.forEach {
                         it.forEach {
                             it.usrnum = 0
