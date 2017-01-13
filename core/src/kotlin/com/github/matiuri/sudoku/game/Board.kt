@@ -44,7 +44,7 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
                     cells.forEach {
                         it.forEach {
                             it.usrnum = 0
-                            it.possibilities.clear()
+                            it.solverPossibilities.clear()
                         }
                     }
                     done = true
@@ -69,15 +69,6 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
                         it.addListener(game.cellListener.java.constructors[0].newInstance(it) as InputListener)
                 }
             }
-        }
-        Cell.timer += delta
-        if (Cell.timer > Cell.time) {
-            cells.forEach {
-                it.forEach {
-                    it.current++
-                }
-            }
-            Cell.timer = 0f
         }
     }
 }

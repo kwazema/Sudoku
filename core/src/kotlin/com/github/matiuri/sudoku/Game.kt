@@ -35,6 +35,7 @@ class Game(val cellListener: KClass<out InputListener>? = null) : AdvancedGame()
                 .queue("UbuntuMono-B", "Fonts/UbuntuMono-B.ttf", FreeTypeFontGenerator::class)
                 //Textures
                 .queue("cell", "Textures/Cell.png", Texture::class)
+                .queue("possibility", "Textures/Possibility.png", Texture::class)
                 //Fonts
                 .queue("UbuntuMB32B", "UbuntuMB32B", BitmapFont::class,
                         FontLoaderParameter(astManager["UbuntuMono-B"]) {

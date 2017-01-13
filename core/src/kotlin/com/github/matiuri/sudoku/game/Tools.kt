@@ -14,7 +14,7 @@ object Tools {
             it.forEach {
                 it.number = 0
                 it.usrnum = 0
-                it.possibilities.clear()
+                it.solverPossibilities.clear()
                 it.hidden = false
             }
         }
@@ -74,29 +74,29 @@ object Tools {
         cells.forEach {
             it.forEach {
                 it.usrnum = 0
-                it.possibilities.clear()
+                it.solverPossibilities.clear()
             }
         }
         var solved: Boolean = false
         while (!solved) {
             cells.forEach {
                 it.filter { it.hidden && it.usrnum == 0 }.forEach { cell ->
-                    cell.possibilities.clear()
+                    cell.solverPossibilities.clear()
                     val related = relatedCells(blocks, cell, cols, rows).filter { it.num != cell.num }
                     (1..9).filter { i ->
                         related.fold(true) { f, c ->
                             (c.hidden || c.number != i) && (!c.hidden || c.usrnum != i) && f
                         }
                     }.forEach {
-                        cell.possibilities.add(it)
+                        cell.solverPossibilities.add(it)
                     }
                 }
             }
             var impossible: Boolean = true
             cells.forEach {
-                it.filter { it.hidden && it.usrnum == 0 && it.possibilities.size == 1 }.forEach {
+                it.filter { it.hidden && it.usrnum == 0 && it.solverPossibilities.size == 1 }.forEach {
                     impossible = false
-                    it.usrnum = it.possibilities.first()
+                    it.usrnum = it.solverPossibilities.first()
                 }
             }
             if (impossible) throw IllegalStateException("Impossible Game, Solver")

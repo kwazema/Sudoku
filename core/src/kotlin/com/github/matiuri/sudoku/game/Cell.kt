@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.github.matiuri.sudoku.Game
+import com.github.matiuri.sudoku.gui.Possibility
 import java.util.*
 
 class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, val row: Int, val block: Int) :
@@ -13,13 +14,11 @@ class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, 
     companion object Static {
         var counter: Int = 1
         var active: Cell? = null
-        val time: Float = .25f
-        var timer: Float = 0f
     }
 
     var num: Int = 0
     var mode: Mode = Mode.NONE
-    var current = 0
+    private val possibilities: Possibility = Possibility(game)
 
     @Volatile
     var number: Int = 0
@@ -28,7 +27,7 @@ class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, 
     @Volatile
     var usrnum: Int = 0
     @Volatile
-    var possibilities: MutableList<Int> = ArrayList()
+    var solverPossibilities: MutableList<Int> = ArrayList() //For automatic solver
 
     init {
         setBounds(x, y, wh, wh)
@@ -42,15 +41,8 @@ class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, 
             game.astManager["UbuntuMB32W", BitmapFont::class].draw(batch, "$number", x + 8f, top - 8f)
         if (usrnum != 0 && hidden)
             game.astManager["UbuntuMB32B", BitmapFont::class].draw(batch, "$usrnum", x + 8f, top - 8f)
-        if (usrnum == 0 && hidden && !possibilities.isEmpty()) {
-            try {
-                game.astManager["UbuntuMB32R", BitmapFont::class].draw(batch,
-                        "${possibilities[current % (possibilities.size)]}", x + 8f, top - 8f)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
         batch?.color = Color.WHITE
+        if (usrnum == 0 && hidden) possibilities.draw(batch, x, top, width)
     }
 
     enum class Mode(val color: Color) {
@@ -78,7 +70,6 @@ class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, 
     }
 
     fun switchPossibility(n: Int) {
-        if (possibilities.contains(n)) possibilities.remove(n)
-        else possibilities.add(n)
+        possibilities.switch(n)
     }
 }
