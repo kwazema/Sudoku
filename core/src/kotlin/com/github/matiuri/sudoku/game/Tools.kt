@@ -24,9 +24,11 @@ object Tools {
                 var candidate: Int
                 val attempts: MutableSet<Int> = HashSet()
                 do {
+                    if (attempts.size == 9) {
+                        throw IllegalStateException("Impossible Game, Generator")
+                    }
                     candidate = random(1, 9)
                     attempts.add(candidate)
-                    if (attempts.size == 9) throw IllegalStateException("Impossible Game, Generator")
                 } while (related.filter { it.num != cell.num }.fold(false) { f, c -> c.number == candidate || f })
                 cell.number = candidate
                 cell.usrnum = cell.number
@@ -38,26 +40,27 @@ object Tools {
         AdvancedGame.log.d(this.javaClass.simpleName, "Attempting to remove cells")
         (1..difficulty).forEach {
             var cell: Cell
-            var count: Int = 0
+            val possibleCells = cells.flatMap { it.asIterable() }.filter { !it.hidden }
+            val tries: MutableSet<Cell> = HashSet()
             do {
-                do {
-                    cell = cells[random(0, 8)][random(0, 8)]
-                    AdvancedGame.log.d(this.javaClass.simpleName, "Try!")
-                } while (cell.hidden)
+                val possibilities = possibleCells.filter { !tries.contains(it) }
+                if (possibilities.isEmpty()) throw IllegalStateException("Impossible Game, Generator")
+                cell = possibilities[random(0, possibilities.size - 1)]
                 cell.hidden = true
                 cell.usrnum = 0
                 var failed: Boolean
                 try {
                     AdvancedGame.log.d(this.javaClass.simpleName, "Attempting to solve")
                     solve(cells)
+                    cell.usrnum = 0
                     failed = false
                 } catch (e: IllegalStateException) {
                     cell.hidden = false
+                    cell.usrnum = cell.number
+                    tries.add(cell)
                     failed = true
                 }
                 AdvancedGame.log.d(this.javaClass.simpleName, "$failed")
-                count++
-                if (failed && count > 500) throw IllegalStateException("Impossible Game, Generator")
             } while (failed)
         }
         AdvancedGame.log.d(this.javaClass.simpleName, "Removed")

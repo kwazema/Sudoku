@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.github.matiuri.sudoku.Game
 import com.github.matiuri.sudoku.game.Board
-import com.github.matiuri.sudoku.game.Cell
 import mati.advancedgdx.screens.Screen
 import kotlin.properties.Delegates
 
@@ -13,7 +12,7 @@ class GameScreen(game: Game) : Screen<Game>(game) {
     private var stage: Stage by Delegates.notNull<Stage>()
 
     override fun show() {
-        stage = Stage(FitViewport(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat()))
+        stage = Stage(FitViewport(360f, 640f))
         val wh = 32f
         val pad = .1f
         val size = wh * 9 + 4 * pad

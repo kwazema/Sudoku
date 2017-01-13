@@ -65,12 +65,13 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
             generated = true
             cells.forEach {
                 it.filter(Cell::hidden).forEach {
-                    it.addListener(game.cellListener.java.constructors[0].newInstance(it) as InputListener)
+                    if (game.cellListener != null)
+                        it.addListener(game.cellListener.java.constructors[0].newInstance(it) as InputListener)
                 }
             }
         }
         Cell.timer += delta
-        if(Cell.timer > Cell.time) {
+        if (Cell.timer > Cell.time) {
             cells.forEach {
                 it.forEach {
                     it.current++

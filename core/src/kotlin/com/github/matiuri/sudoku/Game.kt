@@ -14,7 +14,7 @@ import mati.advancedgdx.assets.FontLoader.FontLoaderParameter
 import mati.advancedgdx.utils.glClearColor
 import kotlin.reflect.KClass
 
-class Game(val cellListener: KClass<out InputListener>) : AdvancedGame() {
+class Game(val cellListener: KClass<out InputListener>? = null) : AdvancedGame() {
     override fun create() {
         super.create()
         Gdx.app.logLevel = LOG_DEBUG
