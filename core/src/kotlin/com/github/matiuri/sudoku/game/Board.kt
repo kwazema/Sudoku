@@ -1,17 +1,29 @@
 package com.github.matiuri.sudoku.game
 
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.scenes.scene2d.ui.Window
 import com.github.matiuri.sudoku.Game
 import com.github.matiuri.sudoku.game.Tools.generate
 import com.github.matiuri.sudoku.screens.NewGameScreen.Difficulty
 import mati.advancedgdx.AdvancedGame.Static.log
+import mati.advancedgdx.utils.addListener1
+import mati.advancedgdx.utils.createButton
+import mati.advancedgdx.utils.createLabel
+import mati.advancedgdx.utils.createNPD
+import kotlin.properties.Delegates
 
 class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Float, difficulty: Difficulty) : Group() {
     private val blocks: Array<Array<Block>>
     private val cells: Array<Array<Cell>>
     private val generator: Thread
     private var generated: Boolean = false
+    private var win: Dialog by Delegates.notNull<Dialog>()
 
     init {
         blocks = Array(3) { x ->
@@ -59,6 +71,26 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
             log.d(Thread.currentThread().name, "Dead!")
         }, "Generator")
         generator.start()
+
+        win = Dialog("Congratulations!", Window.WindowStyle(game.astManager["UbuntuB32Y", BitmapFont::class],
+                Color.WHITE, createNPD(game.astManager["buttonUp", Texture::class], 8))
+        )
+        win.color = Color.GREEN
+        win.text(createLabel("You've complete this Sudoku", game.astManager["UbuntuR16K", BitmapFont::class]))
+
+        val exit: TextButton = createButton("Exit", game.astManager["UbuntuR16K", BitmapFont::class],
+                createNPD(game.astManager["buttonUp", Texture::class], 8),
+                createNPD(game.astManager["buttonDown", Texture::class], 8),
+                createNPD(game.astManager["buttonDown", Texture::class], 8)
+        )
+        exit.color = Color.RED
+        exit.addListener1 { e, a ->
+            game.scrManager.change("title")
+        }
+        win.button(exit)
+        win.background.minWidth = 200f
+        win.background.minHeight = 200f
+        win.buttonTable.cells.forEach { it.expandX().fillX() }
     }
 
     override fun act(delta: Float) {
@@ -71,5 +103,13 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
                 }
             }
         }
+    }
+
+    fun check() {
+        if (generated && cells.fold(true) { f_, c_ ->
+            f_ && c_.filter(Cell::hidden).fold(true) { f, c ->
+                f && c.number == c.usrnum
+            }
+        }) win.show(stage)
     }
 }
