@@ -3,6 +3,8 @@ package com.github.matiuri.sudoku.desktop.input
 import com.badlogic.gdx.Input.Keys.*
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.github.matiuri.sudoku.game.Block
+import com.github.matiuri.sudoku.game.Board
 import com.github.matiuri.sudoku.game.Cell
 
 class CellInputListener(private val cell: Cell) : InputListener() {
@@ -29,7 +31,9 @@ class CellInputListener(private val cell: Cell) : InputListener() {
                     NUMPAD_7, NUM_7 -> cell.usrnum = 7
                     NUMPAD_8, NUM_8 -> cell.usrnum = 8
                     NUMPAD_9, NUM_9 -> cell.usrnum = 9
+                    else -> return false
                 }
+                (((cell.parent) as Block).parent as Board).check()
             }
             Cell.Mode.POSSIBILITIES -> {
                 when (keycode) {
@@ -42,6 +46,7 @@ class CellInputListener(private val cell: Cell) : InputListener() {
                     NUMPAD_7, NUM_7 -> cell.switchPossibility(7)
                     NUMPAD_8, NUM_8 -> cell.switchPossibility(8)
                     NUMPAD_9, NUM_9 -> cell.switchPossibility(9)
+                    else -> return false
                 }
             }
         }
