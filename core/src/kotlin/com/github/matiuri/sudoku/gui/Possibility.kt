@@ -9,7 +9,8 @@ class Possibility(game: Game) {
     private val possibilities: Array<Boolean> = Array(9) { false }
 
     fun switch(n: Int) {
-        possibilities[n - 1] = !possibilities[n - 1]
+        if (n != 0)
+            possibilities[n - 1] = !possibilities[n - 1]
     }
 
     fun draw(batch: Batch?, X: Float, Y: Float, WH: Float) {

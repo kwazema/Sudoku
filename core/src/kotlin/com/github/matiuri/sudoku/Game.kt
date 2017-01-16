@@ -14,15 +14,21 @@ import com.github.matiuri.sudoku.screens.TitleScreen
 import mati.advancedgdx.AdvancedGame
 import mati.advancedgdx.assets.FontLoader.FontLoaderParameter
 import mati.advancedgdx.utils.glClearColor
+import mati.advancedgdx.utils.isAndroid
+import java.util.*
 import kotlin.reflect.KClass
 
-class Game(val cellListener: KClass<out InputListener>? = null) : AdvancedGame() {
+class Game(val cellListener: KClass<out InputListener>? = null,
+           val specificCode: List<Pair<String, (List<Any>) -> Unit>> = ArrayList())
+    : AdvancedGame() {
     private var lastFPS: Int = 0
 
     override fun create() {
         super.create()
         Gdx.app.logLevel = LOG_DEBUG
         init(this)
+        Gdx.input.isCatchBackKey = true
+        Gdx.input.isCatchMenuKey = true
         glClearColor(Color.BLACK)
         prepare()
     }
@@ -67,6 +73,13 @@ class Game(val cellListener: KClass<out InputListener>? = null) : AdvancedGame()
                             it.borderColor = Color.WHITE
                             it.borderWidth = 2f
                         })
+                .queue("UbuntuMB32R", "UbuntuMB32R", BitmapFont::class,
+                        FontLoaderParameter(astManager["UbuntuMono-B"]) {
+                            it.color = Color.RED
+                            it.size = 32
+                            it.borderColor = Color.BLACK
+                            it.borderWidth = 2f
+                        })
                 .queue("UbuntuB64Y", "UbuntuB64Y", BitmapFont::class,
                         FontLoaderParameter(astManager["Ubuntu-B"]) {
                             it.color = Color.YELLOW
@@ -105,5 +118,10 @@ class Game(val cellListener: KClass<out InputListener>? = null) : AdvancedGame()
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         super.render()
+    }
+
+    override fun pause() {
+        super.pause()
+        if (isAndroid()) dispose()
     }
 }
