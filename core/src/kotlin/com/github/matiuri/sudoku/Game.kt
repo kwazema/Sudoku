@@ -12,13 +12,19 @@ import com.github.matiuri.sudoku.screens.GameScreen
 import mati.advancedgdx.AdvancedGame
 import mati.advancedgdx.assets.FontLoader.FontLoaderParameter
 import mati.advancedgdx.utils.glClearColor
+import mati.advancedgdx.utils.isAndroid
+import java.util.*
 import kotlin.reflect.KClass
 
-class Game(val cellListener: KClass<out InputListener>? = null) : AdvancedGame() {
+class Game(val cellListener: KClass<out InputListener>? = null,
+           val specificCode: List<Pair<String, (List<Any>) -> Unit>> = ArrayList())
+    : AdvancedGame() {
     override fun create() {
         super.create()
         Gdx.app.logLevel = LOG_DEBUG
         init(this)
+        Gdx.input.isCatchBackKey = true
+        Gdx.input.isCatchMenuKey = true
         glClearColor(Color.BLACK)
         prepare()
     }
@@ -49,6 +55,13 @@ class Game(val cellListener: KClass<out InputListener>? = null) : AdvancedGame()
                             it.color = Color.WHITE
                             it.size = 32
                             it.borderColor = Color.BLACK
+                            it.borderWidth = 2f
+                        })
+                .queue("UbuntuMB32K", "UbuntuMB32K", BitmapFont::class,
+                        FontLoaderParameter(astManager["UbuntuMono-B"]) {
+                            it.color = Color.BLACK
+                            it.size = 32
+                            it.borderColor = Color.WHITE
                             it.borderWidth = 2f
                         })
                 .queue("UbuntuMB32R", "UbuntuMB32R", BitmapFont::class,

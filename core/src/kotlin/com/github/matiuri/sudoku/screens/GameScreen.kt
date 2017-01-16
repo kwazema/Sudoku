@@ -18,8 +18,12 @@ class GameScreen(game: Game) : Screen<Game>(game) {
         val size = wh * 9 + 4 * pad
         val spx = stage.width / 2f - size / 2f
         val spy = stage.height / 2f - size / 2f
-        stage.addActor(Board(game, spx, spy, wh, pad))
+        stage.addActor(Board(game, spx, spy, wh, pad, stage))
         Gdx.input.inputProcessor = stage
+
+        game.specificCode.filter { it.first == "gameButtons" }.forEach {
+            it.second(arrayListOf(5f, 10f, game, stage))
+        }
     }
 
     override fun render(delta: Float) {

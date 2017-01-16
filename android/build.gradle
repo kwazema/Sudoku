@@ -19,7 +19,7 @@ android {
     }
     defaultConfig {
         applicationId "com.github.matiuri.sudoku"
-        minSdkVersion 8
+        minSdkVersion 11
         targetSdkVersion 23
     }
 }
