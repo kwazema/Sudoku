@@ -14,7 +14,6 @@ import com.github.matiuri.sudoku.screens.TitleScreen
 import mati.advancedgdx.AdvancedGame
 import mati.advancedgdx.assets.FontLoader.FontLoaderParameter
 import mati.advancedgdx.utils.glClearColor
-import mati.advancedgdx.utils.isAndroid
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -118,10 +117,5 @@ class Game(val cellListener: KClass<out InputListener>? = null,
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         super.render()
-    }
-
-    override fun pause() {
-        super.pause()
-        if (isAndroid()) dispose()
     }
 }
