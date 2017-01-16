@@ -3,16 +3,18 @@ package com.github.matiuri.sudoku
 import android.os.Bundle
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
+import com.github.matiuri.sudoku.game.Block
+import com.github.matiuri.sudoku.game.Board
 import com.github.matiuri.sudoku.game.Cell
 import com.github.matiuri.sudoku.input.CellInputListener
 import mati.advancedgdx.utils.addListener1
 import mati.advancedgdx.utils.createButton
+import mati.advancedgdx.utils.createNPD
 
 class AndroidLauncher : AndroidApplication() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +37,16 @@ class AndroidLauncher : AndroidApplication() {
             (0..9).forEach { n ->
                 val button: TextButton = createButton(if (n != 0) "$n" else "-",
                         game.astManager["UbuntuMB32K", BitmapFont::class],
-                        TextureRegionDrawable(TextureRegion(game.astManager["cell", Texture::class])),
-                        TextureRegionDrawable(TextureRegion(game.astManager["cell", Texture::class]))
+                        createNPD(game.astManager["buttonUp", Texture::class], 8),
+                        createNPD(game.astManager["buttonDown", Texture::class], 8)
                 )
+                button.color = Color(n / 9f, 1f - n / 9f, 1f / (n + 1f), 1f)
                 button.addListener1 { e, a ->
                     when (Cell.active?.mode ?: Cell.Mode.NONE) {
-                        Cell.Mode.INSERT -> Cell.active?.usrnum = n
+                        Cell.Mode.INSERT -> {
+                            Cell.active?.usrnum = n
+                            (((Cell.active?.parent) as Block).parent as Board).check()
+                        }
                         Cell.Mode.POSSIBILITIES -> Cell.active?.switchPossibility(n)
                         Cell.Mode.NONE -> {
                             //Nothing
