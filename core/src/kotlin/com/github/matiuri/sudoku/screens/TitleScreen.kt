@@ -19,6 +19,10 @@ import kotlin.properties.Delegates
 
 class TitleScreen(game: Game) : Screen<Game>(game) {
     private var stage: Stage by Delegates.notNull<Stage>()
+    private var checked: Boolean = false
+    private val time: Float = 5f
+    private var timer: Float = 0f
+    private var exit: TextButton by Delegates.notNull<TextButton>()
 
     override fun show() {
         stage = Stage(FitViewport(360f, 640f))
@@ -56,14 +60,19 @@ class TitleScreen(game: Game) : Screen<Game>(game) {
         continueB.color = Color.GRAY
 
         //Exit
-        val exit: TextButton = createButton("Exit", game.astManager["UbuntuR16K", BitmapFont::class],
+        exit = createButton("Exit", game.astManager["UbuntuR16K", BitmapFont::class],
                 createNPD(game.astManager["buttonUp", Texture::class], 8),
                 createNPD(game.astManager["buttonDown", Texture::class], 8),
                 createNPD(game.astManager["buttonDown", Texture::class], 8)
         )
         exit.addListener1 { e, a ->
-            //TODO: Double-ask to exit
-            Gdx.app.exit()
+            if (checked) {
+                checked = false
+                Gdx.app.exit()
+            } else {
+                checked = true
+                exit.color = Color(.5f, 0f, 0f, 1f)
+            }
         }
         table.add(exit).expandX().fillX().pad(5f)
         exit.color = Color.RED
@@ -73,11 +82,20 @@ class TitleScreen(game: Game) : Screen<Game>(game) {
     }
 
     override fun render(delta: Float) {
+        if (checked) {
+            timer += delta
+            if (timer > time) {
+                checked = false
+                timer = 0f
+                exit.color = Color.RED
+            }
+        }
         stage.act(delta)
         stage.draw()
     }
 
     override fun hide() {
+        checked = false
         stage.dispose()
     }
 }

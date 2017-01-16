@@ -101,6 +101,20 @@ class NewGameScreen(game: Game) : Screen<Game>(game) {
         table.add(extreme).expandX().fillX().pad(5f)
         table.row()
 
+        //Back
+        table.add().height(50f)
+        table.row()
+        val back: TextButton = createButton("Back", game.astManager["UbuntuR16K", BitmapFont::class],
+                createNPD(game.astManager["buttonUp", Texture::class], 8),
+                createNPD(game.astManager["buttonDown", Texture::class], 8),
+                createNPD(game.astManager["buttonDown", Texture::class], 8)
+        )
+        back.color = Color(.5f, 0f, 0f, 1f)
+        back.addListener1 { e, a ->
+            game.scrManager.change("title")
+        }
+        table.add(back).expandX().fillX().pad(5f)
+
         //Input
         Gdx.input.inputProcessor = stage
     }

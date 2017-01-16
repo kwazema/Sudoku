@@ -107,6 +107,7 @@ class GameScreen(game: Game) : Screen<Game>(game) {
     }
 
     override fun hide() {
+        checked = false
         stage.dispose()
     }
 }
