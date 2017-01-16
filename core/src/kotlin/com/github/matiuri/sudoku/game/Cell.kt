@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.github.matiuri.sudoku.Game
+import com.github.matiuri.sudoku.Game.Static.rx
+import com.github.matiuri.sudoku.Game.Static.ry
 import com.github.matiuri.sudoku.gui.Possibility
 import java.util.*
 
@@ -39,9 +41,9 @@ class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, 
         batch?.draw(game.astManager["cell", Texture::class], x, y, width, height)
         if ((((parent as Block).parent) as Board).generated) {
             if (number != 0 && !hidden)
-                game.astManager["UbuntuMB32W", BitmapFont::class].draw(batch, "$number", x + 8f, top - 8f)
+                game.astManager["UbuntuMB32W", BitmapFont::class].draw(batch, "$number", x + 8f * rx, top - 8f * ry)
             if (usrnum != 0 && hidden)
-                game.astManager["UbuntuMB32B", BitmapFont::class].draw(batch, "$usrnum", x + 8f, top - 8f)
+                game.astManager["UbuntuMB32B", BitmapFont::class].draw(batch, "$usrnum", x + 8f * rx, top - 8f * ry)
             batch?.color = Color.WHITE
             if (usrnum == 0 && hidden) possibilities.draw(batch, x, top, width)
         }

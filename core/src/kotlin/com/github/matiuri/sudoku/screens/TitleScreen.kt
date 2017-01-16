@@ -8,8 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.Align.center
-import com.badlogic.gdx.utils.viewport.FitViewport
+import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.github.matiuri.sudoku.Game
+import com.github.matiuri.sudoku.Game.Static.rx
+import com.github.matiuri.sudoku.Game.Static.ry
 import mati.advancedgdx.screens.Screen
 import mati.advancedgdx.utils.addListener1
 import mati.advancedgdx.utils.createButton
@@ -25,7 +27,7 @@ class TitleScreen(game: Game) : Screen<Game>(game) {
     private var exit: TextButton by Delegates.notNull<TextButton>()
 
     override fun show() {
-        stage = Stage(FitViewport(360f, 640f))
+        stage = Stage(ScreenViewport())
         val table: Table = Table()
         stage.addActor(table)
         table.setFillParent(true)
@@ -37,6 +39,8 @@ class TitleScreen(game: Game) : Screen<Game>(game) {
                 .align(center)
         table.row()
 
+        val pad: Float = 5f * rx * ry
+
         //New Game
         val newGame: TextButton = createButton("New Game", game.astManager["UbuntuR16K", BitmapFont::class],
                 createNPD(game.astManager["buttonUp", Texture::class], 8),
@@ -46,7 +50,7 @@ class TitleScreen(game: Game) : Screen<Game>(game) {
         newGame.addListener1 { e, a ->
             game.scrManager.change("new")
         }
-        table.add(newGame).expandX().fillX().pad(5f)
+        table.add(newGame).expandX().fillX().pad(pad)
         newGame.color = Color.BLUE
 
         //Continue
@@ -56,7 +60,7 @@ class TitleScreen(game: Game) : Screen<Game>(game) {
                 createNPD(game.astManager["buttonLocked", Texture::class], 8)
         )
         //TODO: Save current puzzle and allow to resume
-        table.add(continueB).expandX().fillX().pad(5f)
+        table.add(continueB).expandX().fillX().pad(pad)
         continueB.color = Color.GRAY
 
         //Exit
@@ -74,7 +78,7 @@ class TitleScreen(game: Game) : Screen<Game>(game) {
                 exit.color = Color(.5f, 0f, 0f, 1f)
             }
         }
-        table.add(exit).expandX().fillX().pad(5f)
+        table.add(exit).expandX().fillX().pad(pad)
         exit.color = Color.RED
 
         //Input
