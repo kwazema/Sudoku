@@ -18,6 +18,13 @@ class AndroidLauncher : AndroidApplication() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val config = AndroidApplicationConfiguration()
+        config.useGyroscope = false
+        config.useAccelerometer = false
+        config.useCompass = false
+        config.useImmersiveMode = true
+        config.useWakelock = true
+        config.hideStatusBar = true
+
         val gameButtons: (List<Any>) -> Unit = { l ->
             //Arguments: x: Float, y: Float, game: Game, stage: Stage
             val x: Float = l[0] as Float

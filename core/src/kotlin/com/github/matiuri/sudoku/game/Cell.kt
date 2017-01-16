@@ -37,12 +37,14 @@ class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, 
         if (!hidden) batch?.color = Color.GRAY
         else batch?.color = mode.color
         batch?.draw(game.astManager["cell", Texture::class], x, y, width, height)
-        if (number != 0 && !hidden)
-            game.astManager["UbuntuMB32W", BitmapFont::class].draw(batch, "$number", x + 8f, top - 8f)
-        if (usrnum != 0 && hidden)
-            game.astManager["UbuntuMB32B", BitmapFont::class].draw(batch, "$usrnum", x + 8f, top - 8f)
-        batch?.color = Color.WHITE
-        if (usrnum == 0 && hidden) possibilities.draw(batch, x, top, width)
+        if ((((parent as Block).parent) as Board).generated) {
+            if (number != 0 && !hidden)
+                game.astManager["UbuntuMB32W", BitmapFont::class].draw(batch, "$number", x + 8f, top - 8f)
+            if (usrnum != 0 && hidden)
+                game.astManager["UbuntuMB32B", BitmapFont::class].draw(batch, "$usrnum", x + 8f, top - 8f)
+            batch?.color = Color.WHITE
+            if (usrnum == 0 && hidden) possibilities.draw(batch, x, top, width)
+        }
     }
 
     enum class Mode(val color: Color) {

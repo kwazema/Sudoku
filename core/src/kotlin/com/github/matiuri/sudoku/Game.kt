@@ -12,6 +12,7 @@ import com.github.matiuri.sudoku.screens.GameScreen
 import mati.advancedgdx.AdvancedGame
 import mati.advancedgdx.assets.FontLoader.FontLoaderParameter
 import mati.advancedgdx.utils.glClearColor
+import mati.advancedgdx.utils.isAndroid
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -22,6 +23,8 @@ class Game(val cellListener: KClass<out InputListener>? = null,
         super.create()
         Gdx.app.logLevel = LOG_DEBUG
         init(this)
+        Gdx.input.isCatchBackKey = true
+        Gdx.input.isCatchMenuKey = true
         glClearColor(Color.BLACK)
         prepare()
     }

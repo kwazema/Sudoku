@@ -1,16 +1,26 @@
 package com.github.matiuri.sudoku.game
 
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog
+import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle
 import com.github.matiuri.sudoku.Game
 import com.github.matiuri.sudoku.game.Tools.generate
 import mati.advancedgdx.AdvancedGame.Static.log
+import mati.advancedgdx.utils.createNPD
 
-class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Float) : Group() {
+class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Float, stage: Stage) : Group() {
     private val blocks: Array<Array<Block>>
     private val cells: Array<Array<Cell>>
     private val generator: Thread
-    private var generated: Boolean = false
+    private val generating: Dialog = Dialog("Generating", WindowStyle(game.astManager["UbuntuMB32R", BitmapFont::class],
+            Color.WHITE, createNPD(game.astManager["cell", Texture::class], 8)) //FIXME: Once merged with gui, s/cell/buttonUp/
+    )
+    var generated: Boolean = false
 
     init {
         blocks = Array(3) { x ->
@@ -33,6 +43,7 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
         }
 
         generator = Thread(Runnable {
+            generating.show(stage)
             Thread.sleep(500)
             var done: Boolean
             var countg: Int = 1
@@ -58,11 +69,14 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
             log.d(Thread.currentThread().name, "Dead!")
         }, "Generator")
         generator.start()
+
+        generating.color = Color(.5f, 0f, 0f, 1f)
     }
 
     override fun act(delta: Float) {
         if (!generator.isAlive && !generated) {
             generated = true
+            generating.hide()
             cells.forEach {
                 it.filter(Cell::hidden).forEach {
                     if (game.cellListener != null)
