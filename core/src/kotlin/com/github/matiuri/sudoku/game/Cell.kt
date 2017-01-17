@@ -66,10 +66,10 @@ class Cell(private val game: Game, x: Float, y: Float, wh: Float, val col: Int, 
         else mode = newMode
         if (mode != Mode.NONE) {
             active = this
-            stage.keyboardFocus = this
+            stage?.keyboardFocus = this
         } else {
             active = null
-            stage.keyboardFocus = null
+            stage?.keyboardFocus = null
         }
     }
 
