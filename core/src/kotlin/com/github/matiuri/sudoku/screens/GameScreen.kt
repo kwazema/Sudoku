@@ -92,11 +92,12 @@ class GameScreen(game: Game) : Screen<Game>(game) {
         pause.background.minWidth = stage.width - 50f
         pause.background.minHeight = stage.height - 100f
         pause.buttonTable.cells.forEach { it.expandX().fillX() }
-        Gdx.input.inputProcessor = stage
 
         game.specificCode.filter { it.first == "gameButtons" }.forEach {
             it.second(arrayListOf(5f, 10f, game, stage))
         }
+
+        Gdx.input.inputProcessor = stage
     }
 
     override fun render(delta: Float) {
