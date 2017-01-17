@@ -17,6 +17,7 @@ import mati.advancedgdx.utils.addListener1
 import mati.advancedgdx.utils.createButton
 import mati.advancedgdx.utils.createLabel
 import mati.advancedgdx.utils.createNPD
+import java.lang.Math.sqrt
 import kotlin.properties.Delegates
 
 class TitleScreen(game: Game) : Screen<Game>(game) {
@@ -39,7 +40,7 @@ class TitleScreen(game: Game) : Screen<Game>(game) {
                 .align(center)
         table.row()
 
-        val pad: Float = 5f * rx * ry
+        val pad: Float = 5f * sqrt((rx * ry).toDouble()).toInt()
 
         //New Game
         val newGame: TextButton = createButton("New Game", game.astManager["UbuntuR16K", BitmapFont::class],

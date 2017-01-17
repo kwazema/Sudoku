@@ -94,6 +94,10 @@ class Game(val cellListener: KClass<out InputListener>? = null,
                             it.size = 64 * (sqrt((rx * ry).toDouble())).toInt()
                             it.borderColor = Color.BLACK
                             it.borderWidth = 2f * (sqrt((rx * ry).toDouble())).toFloat()
+                            if (it.size > 128) {
+                                it.size = 128
+                                it.borderWidth = 4f
+                            }
                         })
                 .queue("UbuntuB32Y", "UbuntuB32Y", BitmapFont::class,
                         FontLoaderParameter(astManager["Ubuntu-B"]) {
@@ -101,6 +105,10 @@ class Game(val cellListener: KClass<out InputListener>? = null,
                             it.size = 32 * (sqrt((rx * ry).toDouble())).toInt()
                             it.borderColor = Color.BLACK
                             it.borderWidth = 2f * (sqrt((rx * ry).toDouble())).toFloat()
+                            if (it.size > 100) {
+                                it.size = 100
+                                it.borderWidth = 4f
+                            }
                         })
                 .queue("UbuntuR16K", "UbuntuR16K", BitmapFont::class,
                         FontLoaderParameter(astManager["Ubuntu-B"]) {

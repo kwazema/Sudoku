@@ -34,11 +34,9 @@ class GameScreen(game: Game) : Screen<Game>(game) {
         val wh = 32f
         val pad = .1f
         val size = wh * 9 + 4 * pad
-        val spx = stage.width / 2f - size / 2f * rx
-        val spy = stage.height / 2f - size / 2f * ry
-        stage.addActor(Board(game, spx, spy, wh * sqrt((rx * ry).toDouble()).toFloat(),
-                pad * sqrt((rx * ry).toDouble()).toFloat(), difficulty, stage)
-        )
+        val spx = stage.width / 2f - (size / 2f) * rx
+        val spy = stage.height / 2f - (size / 2f) * ry
+        stage.addActor(Board(game, spx, spy, wh * sqrt((rx * ry).toDouble()).toFloat(), pad, difficulty, stage))
 
         val pause: Dialog = Dialog("Paused", WindowStyle(game.astManager["UbuntuB64Y", BitmapFont::class],
                 Color.WHITE, createNPD(game.astManager["buttonUp", Texture::class], 8))

@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.ui.Window
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle
 import com.github.matiuri.sudoku.Game
+import com.github.matiuri.sudoku.Game.Static.rx
+import com.github.matiuri.sudoku.Game.Static.ry
 import com.github.matiuri.sudoku.game.Tools.generate
 import com.github.matiuri.sudoku.screens.NewGameScreen.Difficulty
 import mati.advancedgdx.AdvancedGame.Static.log
@@ -95,8 +97,8 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
             game.scrManager.change("title")
         }
         win.button(exit)
-        win.background.minWidth = 200f
-        win.background.minHeight = 200f
+        win.background.minWidth = 200f * rx
+        win.background.minHeight = 200f * ry
         win.buttonTable.cells.forEach { it.expandX().fillX() }
         generating.color = Color(.5f, 0f, 0f, 1f)
     }

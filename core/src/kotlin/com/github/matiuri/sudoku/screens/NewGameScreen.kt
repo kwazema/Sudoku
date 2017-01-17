@@ -18,6 +18,7 @@ import mati.advancedgdx.utils.addListener1
 import mati.advancedgdx.utils.createButton
 import mati.advancedgdx.utils.createLabel
 import mati.advancedgdx.utils.createNPD
+import java.lang.Math.sqrt
 import kotlin.properties.Delegates
 
 class NewGameScreen(game: Game) : Screen<Game>(game) {
@@ -44,7 +45,7 @@ class NewGameScreen(game: Game) : Screen<Game>(game) {
             (game.scrManager["game"] as GameScreen).difficulty = PATHETIC
             game.scrManager.change("game")
         }
-        val pad: Float = 5f * rx * ry
+        val pad: Float = 5f * sqrt((rx * ry).toDouble()).toInt()
         table.add(pathetic).expandX().fillX().pad(pad)
         table.row()
 
