@@ -16,14 +16,11 @@ import com.github.matiuri.sudoku.Game.Static.ry
 import com.github.matiuri.sudoku.game.Tools.generate
 import com.github.matiuri.sudoku.screens.NewGameScreen.Difficulty
 import mati.advancedgdx.AdvancedGame.Static.log
-import mati.advancedgdx.utils.addListener1
-import mati.advancedgdx.utils.createButton
-import mati.advancedgdx.utils.createLabel
-import mati.advancedgdx.utils.createNPD
+import mati.advancedgdx.utils.*
 import kotlin.properties.Delegates
 
-class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Float, difficulty: Difficulty, stage: Stage)
-    : Group() {
+class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Float, difficulty: Difficulty,
+            stage: Stage, private val timer: Timer) : Group() {
     private val blocks: Array<Array<Block>>
     private val cells: Array<Array<Cell>>
     private val generator: Thread
@@ -113,6 +110,7 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
                         it.addListener(game.cellListener.java.constructors[0].newInstance(it) as InputListener)
                 }
             }
+            timer.start(true)
         }
     }
 
@@ -123,6 +121,10 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
             }
         }) {
             Cell.active = null
+            timer.stop()
+            timer.update(0f)
+            win.contentTable.row()
+            win.text(createLabel(timer.text, game.astManager["UbuntuR16K", BitmapFont::class]))
             win.show(stage)
         }
     }
