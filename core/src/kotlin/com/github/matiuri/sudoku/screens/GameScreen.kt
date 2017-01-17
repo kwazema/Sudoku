@@ -12,7 +12,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.github.matiuri.sudoku.Game
 import com.github.matiuri.sudoku.Game.Static.rx
 import com.github.matiuri.sudoku.Game.Static.ry
+import com.github.matiuri.sudoku.game.Block
 import com.github.matiuri.sudoku.game.Board
+import com.github.matiuri.sudoku.game.Cell
 import com.github.matiuri.sudoku.screens.NewGameScreen.Difficulty
 import mati.advancedgdx.screens.Screen
 import mati.advancedgdx.utils.addListener1
@@ -31,6 +33,8 @@ class GameScreen(game: Game) : Screen<Game>(game) {
 
     override fun show() {
         stage = Stage(ScreenViewport())
+        Block.count = 1
+        Cell.counter = 1
         val wh = 32f
         val pad = .1f
         val size = wh * 9 + 4 * pad
