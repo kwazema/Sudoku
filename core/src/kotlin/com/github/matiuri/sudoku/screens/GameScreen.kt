@@ -8,14 +8,17 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle
-import com.badlogic.gdx.utils.viewport.FitViewport
+import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.github.matiuri.sudoku.Game
+import com.github.matiuri.sudoku.Game.Static.rx
+import com.github.matiuri.sudoku.Game.Static.ry
 import com.github.matiuri.sudoku.game.Board
 import com.github.matiuri.sudoku.screens.NewGameScreen.Difficulty
 import mati.advancedgdx.screens.Screen
 import mati.advancedgdx.utils.addListener1
 import mati.advancedgdx.utils.createButton
 import mati.advancedgdx.utils.createNPD
+import java.lang.Math.sqrt
 import kotlin.properties.Delegates
 
 class GameScreen(game: Game) : Screen<Game>(game) {
@@ -27,13 +30,13 @@ class GameScreen(game: Game) : Screen<Game>(game) {
     var difficulty: Difficulty = Difficulty.PATHETIC
 
     override fun show() {
-        stage = Stage(FitViewport(360f, 640f))
+        stage = Stage(ScreenViewport())
         val wh = 32f
         val pad = .1f
         val size = wh * 9 + 4 * pad
-        val spx = stage.width / 2f - size / 2f
-        val spy = stage.height / 2f - size / 2f
-        stage.addActor(Board(game, spx, spy, wh, pad, difficulty, stage))
+        val spx = stage.width / 2f - (size / 2f) * rx
+        val spy = stage.height / 2f - (size / 2f) * ry
+        stage.addActor(Board(game, spx, spy, wh * sqrt((rx * ry).toDouble()).toFloat(), pad, difficulty, stage))
 
         val pause: Dialog = Dialog("Paused", WindowStyle(game.astManager["UbuntuB64Y", BitmapFont::class],
                 Color.WHITE, createNPD(game.astManager["buttonUp", Texture::class], 8))
@@ -75,7 +78,7 @@ class GameScreen(game: Game) : Screen<Game>(game) {
         pauseButton.addListener1 { e, a ->
             pause.show(stage)
         }
-        pauseButton.setBounds(10f, stage.height - 42f, 32f, 32f)
+        pauseButton.setBounds(10f * rx, stage.height - 42f * ry, 32f * rx, 32f * ry)
         pauseButton.color = Color.RED
         stage.addActor(pauseButton)
 

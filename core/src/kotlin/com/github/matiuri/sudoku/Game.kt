@@ -9,17 +9,24 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.github.matiuri.sudoku.screens.GameScreen
+import com.github.matiuri.sudoku.screens.LoadingScreen
 import com.github.matiuri.sudoku.screens.NewGameScreen
 import com.github.matiuri.sudoku.screens.TitleScreen
 import mati.advancedgdx.AdvancedGame
 import mati.advancedgdx.assets.FontLoader.FontLoaderParameter
 import mati.advancedgdx.utils.glClearColor
+import java.lang.Math.sqrt
 import java.util.*
 import kotlin.reflect.KClass
 
 class Game(val cellListener: KClass<out InputListener>? = null,
            val specificCode: List<Pair<String, (List<Any>) -> Unit>> = ArrayList())
     : AdvancedGame() {
+    companion object Static {
+        var rx: Float = 0f
+        var ry: Float = 0f
+    }
+
     private var lastFPS: Int = 0
 
     override fun create() {
@@ -29,6 +36,10 @@ class Game(val cellListener: KClass<out InputListener>? = null,
         Gdx.input.isCatchBackKey = true
         Gdx.input.isCatchMenuKey = true
         glClearColor(Color.BLACK)
+        rx = Gdx.graphics.width.toFloat() / 360f
+        ry = Gdx.graphics.height.toFloat() / 640f
+        log.d(this.javaClass.simpleName, "rx = $rx | ry = $ry")
+        astManager.screen = LoadingScreen::class.java
         prepare()
     }
 
@@ -54,51 +65,59 @@ class Game(val cellListener: KClass<out InputListener>? = null,
                 .queue("UbuntuMB32B", "UbuntuMB32B", BitmapFont::class,
                         FontLoaderParameter(astManager["UbuntuMono-B"]) {
                             it.color = Color.BLUE
-                            it.size = 32
+                            it.size = 32 * (sqrt((rx * ry).toDouble())).toInt()
                             it.borderColor = Color.YELLOW
-                            it.borderWidth = 2f
+                            it.borderWidth = 2f * (sqrt((rx * ry).toDouble())).toFloat()
                         })
                 .queue("UbuntuMB32W", "UbuntuMB32W", BitmapFont::class,
                         FontLoaderParameter(astManager["UbuntuMono-B"]) {
                             it.color = Color.WHITE
-                            it.size = 32
+                            it.size = 32 * (sqrt((rx * ry).toDouble())).toInt()
                             it.borderColor = Color.BLACK
-                            it.borderWidth = 2f
+                            it.borderWidth = 2f * (sqrt((rx * ry).toDouble())).toFloat()
                         })
                 .queue("UbuntuMB32K", "UbuntuMB32K", BitmapFont::class,
                         FontLoaderParameter(astManager["UbuntuMono-B"]) {
                             it.color = Color.BLACK
-                            it.size = 32
+                            it.size = 32 * (sqrt((rx * ry).toDouble())).toInt()
                             it.borderColor = Color.WHITE
-                            it.borderWidth = 2f
+                            it.borderWidth = 2f * (sqrt((rx * ry).toDouble())).toFloat()
                         })
                 .queue("UbuntuMB32R", "UbuntuMB32R", BitmapFont::class,
                         FontLoaderParameter(astManager["UbuntuMono-B"]) {
                             it.color = Color.RED
-                            it.size = 32
+                            it.size = 32 * (sqrt((rx * ry).toDouble())).toInt()
                             it.borderColor = Color.BLACK
-                            it.borderWidth = 2f
+                            it.borderWidth = 2f * (sqrt((rx * ry).toDouble())).toFloat()
                         })
                 .queue("UbuntuB64Y", "UbuntuB64Y", BitmapFont::class,
                         FontLoaderParameter(astManager["Ubuntu-B"]) {
                             it.color = Color.YELLOW
-                            it.size = 64
+                            it.size = 64 * (sqrt((rx * ry).toDouble())).toInt()
                             it.borderColor = Color.BLACK
-                            it.borderWidth = 2f
+                            it.borderWidth = 2f * (sqrt((rx * ry).toDouble())).toFloat()
+                            if (it.size > 128) {
+                                it.size = 128
+                                it.borderWidth = 4f
+                            }
                         })
                 .queue("UbuntuB32Y", "UbuntuB32Y", BitmapFont::class,
                         FontLoaderParameter(astManager["Ubuntu-B"]) {
                             it.color = Color.YELLOW
-                            it.size = 32
+                            it.size = 32 * (sqrt((rx * ry).toDouble())).toInt()
                             it.borderColor = Color.BLACK
-                            it.borderWidth = 2f
+                            it.borderWidth = 2f * (sqrt((rx * ry).toDouble())).toFloat()
+                            if (it.size > 100) {
+                                it.size = 100
+                                it.borderWidth = 4f
+                            }
                         })
                 .queue("UbuntuR16K", "UbuntuR16K", BitmapFont::class,
                         FontLoaderParameter(astManager["Ubuntu-B"]) {
                             it.color = Color.BLACK
-                            it.size = 16
+                            it.size = 16 * (sqrt((rx * ry).toDouble())).toInt()
                             it.borderColor = Color.WHITE
-                            it.borderWidth = 2f
+                            it.borderWidth = 2f * (sqrt((rx * ry).toDouble())).toFloat()
                         })
                 //Load Assets
                 .load {

@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.github.matiuri.sudoku.Game.Static.rx
+import com.github.matiuri.sudoku.Game.Static.ry
 import com.github.matiuri.sudoku.game.Block
 import com.github.matiuri.sudoku.game.Board
 import com.github.matiuri.sudoku.game.Cell
@@ -53,7 +55,7 @@ class AndroidLauncher : AndroidApplication() {
                         }
                     }
                 }
-                button.setBounds(x + 35f * n, y, 32f, 32f)
+                button.setBounds((x + 35f * n) * rx, y * ry, 32f * rx, 32f * ry)
                 stage.addActor(button)
             }
         }
