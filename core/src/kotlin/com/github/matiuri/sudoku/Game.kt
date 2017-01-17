@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.github.matiuri.sudoku.screens.GameScreen
+import com.github.matiuri.sudoku.screens.LoadingScreen
 import com.github.matiuri.sudoku.screens.NewGameScreen
 import com.github.matiuri.sudoku.screens.TitleScreen
 import mati.advancedgdx.AdvancedGame
@@ -38,6 +39,7 @@ class Game(val cellListener: KClass<out InputListener>? = null,
         rx = Gdx.graphics.width.toFloat() / 360f
         ry = Gdx.graphics.height.toFloat() / 640f
         log.d(this.javaClass.simpleName, "rx = $rx | ry = $ry")
+        astManager.screen = LoadingScreen::class.java
         prepare()
     }
 
