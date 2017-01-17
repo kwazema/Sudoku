@@ -122,7 +122,6 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
                 f && c.number == c.usrnum
             }
         }) {
-            cells.forEach { it.forEach(Cell::clearListeners) }
             Cell.active = null
             win.show(stage)
         }

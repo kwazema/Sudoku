@@ -19,7 +19,7 @@ class LoadingScreen(game: Game, manager: AssetManager, after: () -> Unit) : Load
         super.show()
         sb = SpriteBatch()
         font = BitmapFont()
-        font.data.scale(sqrt((rx * ry).toDouble()).toFloat())
+        font.data.scale(sqrt((rx * ry).toDouble() - 1).toFloat())
     }
 
     override fun render(delta: Float) {
