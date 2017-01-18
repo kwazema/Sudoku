@@ -28,21 +28,28 @@ class GameScreen(game: Game) : Screen<Game>(game) {
     private var timer: Float = 0f
     private var checked: Boolean = false
     private var exit: TextButton by Delegates.notNull<TextButton>()
-    private var gameTimer: Timer = Timer()
+    private var gameTimer: Timer by Delegates.notNull<Timer>()
     private var timerLabel: Label by Delegates.notNull<Label>()
 
     var difficulty: Difficulty = Difficulty.PATHETIC
 
     override fun show() {
+        gameTimer = Timer()
         stage = Stage(ScreenViewport())
+
+        //Background
+        stage.addActor(game.background)
+
         Block.count = 1
         Cell.counter = 1
-        val wh = 32f
-        val pad = .1f
-        val size = wh * 9 + 4 * pad
-        val spx = stage.width / 2f - (size / 2f) * rx
-        val spy = stage.height / 2f - (size / 2f) * ry
-        val board = Board(game, spx, spy, wh * sqrt((rx * ry).toDouble()).toFloat(), pad, difficulty, stage, gameTimer)
+        val wh: Float = 32f
+        val pad: Float = .1f
+        val size: Float = wh * 9 + 4 * pad
+        val spx: Float = stage.width / 2f - (size / 2f + 3.5f) * rx
+        val spy: Float = stage.height / 2f - (size / 2f) * ry
+        val board: Board = Board(game, spx, spy, wh * sqrt((rx * ry).toDouble()).toFloat(), pad, difficulty, stage,
+                gameTimer
+        )
         stage.addActor(board)
 
         val pause: Dialog = Dialog("Paused", WindowStyle(game.astManager["UbuntuB64Y", BitmapFont::class],
