@@ -51,6 +51,7 @@ class GameScreen(game: Game) : Screen<Game>(game) {
                 gameTimer
         )
         stage.addActor(board)
+        board.generator.start()
 
         val pause: Dialog = Dialog("Paused", WindowStyle(game.astManager["UbuntuB64Y", BitmapFont::class],
                 Color.WHITE, createNPD(game.astManager["buttonUp", Texture::class], 8))

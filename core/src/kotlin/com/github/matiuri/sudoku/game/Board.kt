@@ -21,11 +21,11 @@ import kotlin.properties.Delegates
 
 class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Float, difficulty: Difficulty,
             stage: Stage, private val timer: Timer) : Group() {
+    val generator: Thread
     private val blocks: Array<Array<Block>>
     private val cells: Array<Array<Cell>>
-    private val generator: Thread
     private var win: Dialog by Delegates.notNull<Dialog>()
-    private val generating: Dialog = Dialog("Generating", WindowStyle(game.astManager["UbuntuMB32R", BitmapFont::class],
+    private val generating: Dialog = Dialog("", WindowStyle(game.astManager["UbuntuMB32R", BitmapFont::class],
             Color.WHITE, createNPD(game.astManager["buttonUp", Texture::class], 8))
     )
     var generated: Boolean = false
@@ -76,7 +76,6 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
             log.d(this.javaClass.simpleName, "$countg | $counts | ${countg + counts}")
             log.d(Thread.currentThread().name, "Dead!")
         }, "Generator")
-        generator.start()
 
         win = Dialog("Congratulations!", Window.WindowStyle(game.astManager["UbuntuB32Y", BitmapFont::class],
                 Color.WHITE, createNPD(game.astManager["buttonUp", Texture::class], 8))
@@ -98,6 +97,7 @@ class Board(private val game: Game, spx: Float, spy: Float, wh: Float, pad: Floa
         win.background.minHeight = 200f * ry
         win.buttonTable.cells.forEach { it.expandX().fillX() }
         generating.color = Color(.5f, 0f, 0f, 1f)
+        generating.text(createLabel("Generating", game.astManager["UbuntuMB32R", BitmapFont::class]))
     }
 
     override fun act(delta: Float) {
