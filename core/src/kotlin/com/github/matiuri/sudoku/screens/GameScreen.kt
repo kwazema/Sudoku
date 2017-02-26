@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle
 import com.badlogic.gdx.utils.viewport.ScreenViewport
@@ -17,9 +18,7 @@ import com.github.matiuri.sudoku.game.Board
 import com.github.matiuri.sudoku.game.Cell
 import com.github.matiuri.sudoku.screens.NewGameScreen.Difficulty
 import mati.advancedgdx.screens.Screen
-import mati.advancedgdx.utils.addListener1
-import mati.advancedgdx.utils.createButton
-import mati.advancedgdx.utils.createNPD
+import mati.advancedgdx.utils.*
 import java.lang.Math.sqrt
 import kotlin.properties.Delegates
 
@@ -29,18 +28,30 @@ class GameScreen(game: Game) : Screen<Game>(game) {
     private var timer: Float = 0f
     private var checked: Boolean = false
     private var exit: TextButton by Delegates.notNull<TextButton>()
+    private var gameTimer: Timer by Delegates.notNull<Timer>()
+    private var timerLabel: Label by Delegates.notNull<Label>()
+
     var difficulty: Difficulty = Difficulty.PATHETIC
 
     override fun show() {
+        gameTimer = Timer()
         stage = Stage(ScreenViewport())
+
+        //Background
+        stage.addActor(game.background)
+
         Block.count = 1
         Cell.counter = 1
-        val wh = 32f
-        val pad = .1f
-        val size = wh * 9 + 4 * pad
-        val spx = stage.width / 2f - (size / 2f) * rx
-        val spy = stage.height / 2f - (size / 2f) * ry
-        stage.addActor(Board(game, spx, spy, wh * sqrt((rx * ry).toDouble()).toFloat(), pad, difficulty, stage))
+        val wh: Float = 32f
+        val pad: Float = .1f
+        val size: Float = wh * 9 + 4 * pad
+        val spx: Float = stage.width / 2f - (size / 2f + 3.5f) * rx
+        val spy: Float = stage.height / 2f - (size / 2f) * ry
+        val board: Board = Board(game, spx, spy, wh * sqrt((rx * ry).toDouble()).toFloat(), pad, difficulty, stage,
+                gameTimer
+        )
+        stage.addActor(board)
+        board.generator.start()
 
         val pause: Dialog = Dialog("Paused", WindowStyle(game.astManager["UbuntuB64Y", BitmapFont::class],
                 Color.WHITE, createNPD(game.astManager["buttonUp", Texture::class], 8))
@@ -72,6 +83,7 @@ class GameScreen(game: Game) : Screen<Game>(game) {
             pause.hide()
             exit.color = Color.RED
             checked = false
+            gameTimer.start()
         }
 
         val pauseButton: TextButton = createButton("P", game.astManager["UbuntuMB32K", BitmapFont::class],
@@ -81,6 +93,7 @@ class GameScreen(game: Game) : Screen<Game>(game) {
         )
         pauseButton.addListener1 { e, a ->
             pause.show(stage)
+            gameTimer.stop()
         }
         pauseButton.setBounds(10f * rx, stage.height - 42f * ry, 32f * rx, 32f * ry)
         pauseButton.color = Color.RED
@@ -97,6 +110,10 @@ class GameScreen(game: Game) : Screen<Game>(game) {
             it.second(arrayListOf(5f, 10f, game, stage))
         }
 
+        timerLabel = createLabel(gameTimer.text, game.astManager["UbuntuMB32W", BitmapFont::class])
+        timerLabel.setPosition(stage.width - timerLabel.width - 10f * rx, stage.height - timerLabel.height - 20f * ry)
+        stage.addActor(timerLabel)
+
         Gdx.input.inputProcessor = stage
     }
 
@@ -109,6 +126,9 @@ class GameScreen(game: Game) : Screen<Game>(game) {
                 exit.color = Color.RED
             }
         }
+
+        gameTimer.update(delta)
+        timerLabel.setText(gameTimer.text)
 
         stage.act(delta)
         stage.draw()

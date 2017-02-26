@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.github.matiuri.sudoku.screens.GameScreen
 import com.github.matiuri.sudoku.screens.LoadingScreen
 import com.github.matiuri.sudoku.screens.NewGameScreen
@@ -17,6 +18,7 @@ import mati.advancedgdx.assets.FontLoader.FontLoaderParameter
 import mati.advancedgdx.utils.glClearColor
 import java.lang.Math.sqrt
 import java.util.*
+import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 
 class Game(val cellListener: KClass<out InputListener>? = null,
@@ -27,6 +29,7 @@ class Game(val cellListener: KClass<out InputListener>? = null,
         var ry: Float = 0f
     }
 
+    var background: Image by Delegates.notNull<Image>()
     private var lastFPS: Int = 0
 
     override fun create() {
@@ -61,6 +64,7 @@ class Game(val cellListener: KClass<out InputListener>? = null,
                 .queue("buttonUp", "Textures/ButtonUp.png", Texture::class)
                 .queue("buttonDown", "Textures/ButtonDown.png", Texture::class)
                 .queue("buttonLocked", "Textures/ButtonLocked.png", Texture::class)
+                .queue("background", "Textures/Background.png", Texture::class)
                 //Fonts
                 .queue("UbuntuMB32B", "UbuntuMB32B", BitmapFont::class,
                         FontLoaderParameter(astManager["UbuntuMono-B"]) {
@@ -123,6 +127,10 @@ class Game(val cellListener: KClass<out InputListener>? = null,
                 .load {
                     //Dispose font generators, which are useless since this time
                     astManager.remove("Ubuntu-R").remove("Ubuntu-B").remove("UbuntuMono-R").remove("UbuntuMono-B")
+
+                    background = Image(astManager["background", Texture::class])
+                    background.setFillParent(true)
+                    background.color = Color.GOLDENROD
 
                     scrManager.loadAll()
                     scrManager.change("title")

@@ -26,6 +26,10 @@ class NewGameScreen(game: Game) : Screen<Game>(game) {
 
     override fun show() {
         stage = Stage(ScreenViewport())
+
+        //Background
+        stage.addActor(game.background)
+
         val table: Table = Table()
         stage.addActor(table)
         table.setFillParent(true)
